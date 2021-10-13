@@ -1,4 +1,4 @@
-package factory;
+package factorys;
 
 import models.Individuo;
 
