@@ -1,12 +1,14 @@
 package controllers;
 
 import factorys.PopulacaoFactory;
+import models.Individuo;
 import models.Populacao;
 import utils.PorcentagensCaixas;
 
 public class App {
 
-	public int contadorAux = 3;
+	public Individuo melhorInviduo;
+	
 	public App() {}
 	
 	/*
@@ -27,15 +29,11 @@ public class App {
 		PorcentagensCaixas.calculaPorcentagensDasCaixas();
 		PopulacaoFactory populacaoFactory = new PopulacaoFactory();
 		Populacao populacao = populacaoFactory.criaPopulacaoInicial();
+		populacao.avaliarPopulacao();
+		melhorInviduo = populacao.getMelhorIndividuo();
 		
-		while(!validarSatisfacaoResultado(populacao)) {
+		populacao = populacaoFactory.criarNovaPopulacao(populacao);
 			
-		}
-		
 	}
 	
-	private boolean validarSatisfacaoResultado(Populacao populacao) {
-		
-		return (contadorAux == 0);
-	}
 }

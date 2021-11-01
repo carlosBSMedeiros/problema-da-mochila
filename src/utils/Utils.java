@@ -33,5 +33,23 @@ public class Utils {
 
 		return -1;
 	}
+	
+	public static int verificaIndiceEquivalenteAporcentagem(Double[] porcentagens) {
+		
+		Double numeroAleatorio = geraNumeroAleatorio();
+		if (numeroAleatorio > 1) {
+			throw new RuntimeException();
+		}
+		for (int i = 0; i < porcentagens.length; i++) {
+			if (i == 0 && numeroAleatorio <= porcentagens[i]) {
+				return 0;
+			}
+			if (i > 0 && numeroAleatorio > porcentagens[i - 1] && numeroAleatorio <= porcentagens[i]) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 
 }

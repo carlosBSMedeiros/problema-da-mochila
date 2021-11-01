@@ -6,36 +6,30 @@ import utils.Utils;
 
 public class Individuo {
 
-	private int cromossomoCaixaA;
-	private int cromossomoCaixaB;
-	private int cromossomoCaixaC;
-	private int cromossomoCaixaD;
+	private int[] fitaCromossomos;
 	private Integer pesoTotal;
 	private Integer valorTotal;
 
 	public Individuo() {
-		cromossomoCaixaA = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaA());
-		cromossomoCaixaB = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaB());
-		cromossomoCaixaC = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaC());
-		cromossomoCaixaD = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaD());
-		calculaPesoTotal();
-		calculaValorTotal();
+		preencherFitaCromos();
+		calcularPesoTotal();
+		calcularValorTotal();
 	}
 
 	public int getCromossomoCaixaA() {
-		return cromossomoCaixaA;
+		return fitaCromossomos[0];
 	}
 
 	public int getCromossomoCaixaB() {
-		return cromossomoCaixaB;
+		return fitaCromossomos[1];
 	}
 
 	public int getCromossomoCaixaC() {
-		return cromossomoCaixaC;
+		return fitaCromossomos[2];
 	}
 
 	public int getCromossomoCaixaD() {
-		return cromossomoCaixaD;
+		return fitaCromossomos[3];
 	}
 
 	public Integer getPesoTotal() {
@@ -45,15 +39,27 @@ public class Individuo {
 	public Integer getValorTotal() {
 		return valorTotal;
 	}
+	
+	public int[] getFitaCromossomos() {
+		return fitaCromossomos;
+	}
+	
+	private void preencherFitaCromos() {
+		fitaCromossomos = new int[Constantes.QUANT_CROMOSSOMOS];
+		fitaCromossomos[0] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaA());;
+		fitaCromossomos[1] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaB());;
+		fitaCromossomos[2] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaC());
+		fitaCromossomos[3] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaD());
+	}
 
-	private void calculaPesoTotal() {
+	public void calcularPesoTotal() {
 		this.pesoTotal = (this.getCromossomoCaixaA() * Constantes.PESO_CAIXA_A)
 				+ (this.getCromossomoCaixaB() * Constantes.PESO_CAIXA_B)
 				+ (this.getCromossomoCaixaC() * Constantes.PESO_CAIXA_C)
 				+ (this.getCromossomoCaixaD() * Constantes.PESO_CAIXA_D);
 	}
 	
-	private void calculaValorTotal() {
+	private void calcularValorTotal() {
 		this.valorTotal = (this.getCromossomoCaixaA() * Constantes.VALOR_CAIXA_A)
 				+ (this.getCromossomoCaixaB() * Constantes.VALOR_CAIXA_B)
 				+ (this.getCromossomoCaixaC() * Constantes.VALOR_CAIXA_C)
@@ -63,10 +69,8 @@ public class Individuo {
 	@Override
 	public String toString() {
 
-		return "Informações do indivíduo ->\r" + " Quantidade de caixas A: " + getCromossomoCaixaA() + "\r"
-				+ " Quantidade de caixas B: " + getCromossomoCaixaB() + "\r" + " Quantidade de caixas C: "
-				+ getCromossomoCaixaC() + "\r" + " Quantidade de caixas D: " + getCromossomoCaixaD() + "\r"
-				+" Peso total -> " + getPesoTotal()+" | Valor Total ->"+getValorTotal()+"\r";
+		return "Indivíduo ->\r" + " quant_A: " + getCromossomoCaixaA() + "; quant_B: " + getCromossomoCaixaB()
+		+ "; quant_C: " + getCromossomoCaixaC() + "; quant_D: " + getCromossomoCaixaD() +"; Peso total -> " + getPesoTotal()+" | Valor Total ->"+getValorTotal()+"\r";
 	}
 
 }

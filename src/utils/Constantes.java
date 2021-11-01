@@ -18,7 +18,9 @@ public class Constantes {
 	public static final int PESO_CAIXA_D = 4;
 	public static final int VALOR_CAIXA_D = 70;
 
-	public static final int TAMANHO_POPULACAO = 6;
+	public static final int QUANT_CROMOSSOMOS = 4;
+
+	public static final int TAMANHO_POPULACAO = 4;
 	
 	public static final int CAPACIDADE_MOCHILA = 25;
 }
