@@ -3,6 +3,8 @@ package factorys;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import models.Individuo;
@@ -39,8 +41,15 @@ public class PopulacaoFactory {
 		//aqui inicia o crossover na população. O objetivo é selecionar
 		//dois individuos, fazer o crossover deles, adicionar os dois individos a nova pop
 		//e adicionar os individuos da população anterior que não sofreram cross over
-		novaPopulacao = crossOver(novaPopulacao, populacaoAnterior);
-
+		
+		double numeroElitismo = (Constantes.ELITISMO * Constantes.TAMANHO_POPULACAO); 
+		int elitismo = (int) Math.round(numeroElitismo);
+		novaPopulacao.setIndividuos(populacaoAnterior.getIndividuos().subList(0, elitismo));
+		
+		for (int i = elitismo; i < Constantes.TAMANHO_POPULACAO; i++) {
+			novaPopulacao = crossOver(novaPopulacao, populacaoAnterior);
+		}
+		novaPopulacao.setGeracaoAnterior(populacaoAnterior);
 		//selecionar um individuo para mutação
 		mutacao();
 		
@@ -52,70 +61,43 @@ public class PopulacaoFactory {
 	}
 
 	public Populacao crossOver(Populacao novaPopulacao, Populacao populacaoAnterior) {
+		Random random = new Random();
 		
-		ArrayList<Individuo> individuosPopAnterior = populacaoAnterior.getIndividuos();
 		//dividir em dois vetores auxiliares os dois grupos de individuos
-		int metadeTamanhoPopulacao = Constantes.TAMANHO_POPULACAO / 2; 
-		Individuo[] melhoresIndividuos = new Individuo[metadeTamanhoPopulacao];
-		Individuo[] pioresIndividuos  = new Individuo[metadeTamanhoPopulacao];
+		List<Individuo> melhoresIndividuos = novaPopulacao.getIndividuos();
+		int index = random.nextInt(novaPopulacao.getIndividuos().size());
+		Individuo indiv1 = melhoresIndividuos.get(index);
 		
-		int auxM = 0;
-		int auxP = 0;
-		for (int i = 0; i < Constantes.TAMANHO_POPULACAO; i++) {
-			if(i < metadeTamanhoPopulacao) {
-				melhoresIndividuos[auxM] = individuosPopAnterior.get(i);
-				auxM++;
-			} else {
-				pioresIndividuos[auxP] = individuosPopAnterior.get(i);
-				auxP++;
-			}
-		}
+		index = random.nextInt(novaPopulacao.getIndividuos().size());
+		Individuo indiv2 = melhoresIndividuos.get(index);
 		
-		//população antiga dividida em dois grupos, os melhores e os piores individuos
-		
-//		System.out.println("Melhores individuos ->");
-//		for (Individuo individuo : melhoresIndividuos) {
-//			System.out.print(individuo.getValorTotal() + ", ");
-//		}
-//		
-//		System.out.println("\rPiores individuos ->");
-//		for (Individuo individuo : pioresIndividuos) {
-//			System.out.print(individuo.getValorTotal() + ", ");
-//		}
-		
-		Individuo MIndividuoCrossOver = escolherIndividuoParaCrossOver(melhoresIndividuos, novaPopulacao);
-		Individuo PIndividuoCrossOver = escolherIndividuoParaCrossOver(pioresIndividuos, novaPopulacao);
 		
 		//individuos selecinados aleatoriamente para o cross over - SELEÇÃO FUNCIONANDO
 		//efetivamente faz o crossover entre os individuos
-		crossOver(MIndividuoCrossOver, PIndividuoCrossOver);
-		
+		 Individuo novoIndiv = crossOver(indiv1, indiv2);
 		
 		//o cross over pode gerar individuos invalidos. Se forem, geramos novos aleatorios
-		if(!individuosFactory.validarIndividuo(MIndividuoCrossOver)) {
-			MIndividuoCrossOver = individuosFactory.criarIndividuoValido();
-		}
-		
-		if(!individuosFactory.validarIndividuo(PIndividuoCrossOver)) {
-			PIndividuoCrossOver = individuosFactory.criarIndividuoValido();
+		if(!individuosFactory.validarIndividuo(novoIndiv)) {
+			novoIndiv = individuosFactory.criarIndividuoValido();
 		}
 		
 		//adiciona os individuos a população nova apos o crossover
-		novaPopulacao.getIndividuos().add(MIndividuoCrossOver);
-		novaPopulacao.getIndividuos().add(PIndividuoCrossOver);
+		novaPopulacao.getIndividuos().add(novoIndiv);
 		
 		return novaPopulacao;
 	}
 	
-	private Individuo escolherIndividuoParaCrossOver(Individuo[] individuos, Populacao novaPopulacao) {
-		Double[] porcentagens = new Double[individuos.length];
+	
+	/// por agora não vamos mais usar essa selção
+	private Individuo escolherIndividuoParaCrossOver(List<Individuo> individuos, Populacao novaPopulacao) {
+		Double[] porcentagens = new Double[individuos.size()];
 		double valorTotal = 0.0;
-		for (int i = 0; i < individuos.length; i++) {
-			valorTotal += individuos[i].getValorTotal();
+		for (int i = 0; i < individuos.size(); i++) {
+			valorTotal += individuos.get(i).getValorTotal();
 		}
 		
-		for (int i = 0; i < individuos.length; i++) {
-			Double porcentagem = ((individuos[i].getValorTotal() * 100.0)/ valorTotal);
+		for (int i = 0; i < individuos.size(); i++) {
+			Double porcentagem = ((individuos.get(i).getValorTotal() * 100.0)/ valorTotal);
 			porcentagem = new BigDecimal(porcentagem/100).setScale(3, RoundingMode.FLOOR).doubleValue();
 			if(i > 0) {
 				porcentagens[i] = porcentagem + porcentagens[i-1];
@@ -126,25 +108,30 @@ public class PopulacaoFactory {
 		
 		int indice = Utils.verificaIndiceEquivalenteAporcentagem(porcentagens);
 		
-		for(int i = 0; i < individuos.length; i++) {
-			if(i != indice) {
-				novaPopulacao.getIndividuos().add(individuos[i]);
-			}
+		if(indice != -1) {
+			novaPopulacao.getIndividuos().add(individuos.get(indice));	
 		}
 		
-		return individuos[indice];
+		return individuos.get(indice);
 	}
 	
-	private void crossOver(Individuo ind1, Individuo ind2) {
+	private Individuo crossOver(Individuo ind1, Individuo ind2) {
+		Individuo novo = new Individuo();
+		
 		Random random = new Random();
 		int indexCromossomo = random.nextInt(Constantes.QUANT_CROMOSSOMOS);
 		
-		//trocar os cromossomos dos individuos
-		int cromossomoAux = ind1.getFitaCromossomos()[indexCromossomo];
-		ind1.getFitaCromossomos()[indexCromossomo] = ind2.getFitaCromossomos()[indexCromossomo];
-		ind2.getFitaCromossomos()[indexCromossomo] = cromossomoAux;
-		ind1.calcularPesoTotal();
-		ind2.calcularPesoTotal();
+		for (int i = 0; i < ind1.getFitaCromossomos().length; i++) {
+			if(i <= indexCromossomo) {
+				novo.getFitaCromossomos()[i] = ind1.getFitaCromossomos()[i];				
+			}
+			if(i > indexCromossomo) {
+				novo.getFitaCromossomos()[i] = ind2.getFitaCromossomos()[i];				
+			}
+			
+		}
+		
+		return novo;
 	}
 	
 	private void mutacao() {

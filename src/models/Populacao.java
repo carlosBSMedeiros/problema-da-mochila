@@ -1,13 +1,14 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import utils.Constantes;
 
 public class Populacao {
 
 	private int geracao;
-	private ArrayList<Individuo> individuos;
+	private List<Individuo> individuos;
 	private Individuo melhorIndividuo;
 	private Populacao proximaGeracao;
 	private Populacao geracaoAnterior;
@@ -24,8 +25,12 @@ public class Populacao {
 	public Individuo getIndividuo(int index) {
 		return individuos.get(index);
 	}
+	
+	public void setIndividuos(List<Individuo> individuos) {
+		this.individuos = individuos;
+	}
 
-	public ArrayList<Individuo> getIndividuos() {
+	public List<Individuo> getIndividuos() {
 		return this.individuos;
 	}
 
@@ -67,7 +72,7 @@ public class Populacao {
 		int i;
 
 		Individuo individuoAux = null;
-		Individuo[] individuosVet = new Individuo[Constantes.TAMANHO_POPULACAO];
+		Individuo[] individuosVet = new Individuo[individuos.size()];
 		
 		individuos.toArray(individuosVet);
 		
