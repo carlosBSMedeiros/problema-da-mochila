@@ -1,8 +1,11 @@
 package controllers;
 
+import java.util.Iterator;
+
 import factorys.PopulacaoFactory;
 import models.Individuo;
 import models.Populacao;
+import utils.Constantes;
 import utils.PorcentagensCaixas;
 
 public class App {
@@ -31,8 +34,21 @@ public class App {
 		Populacao populacao = populacaoFactory.criaPopulacaoInicial();
 		populacao.avaliarPopulacao();
 		melhorInviduo = populacao.getMelhorIndividuo();
+		int geracao = populacao.getGeracao();
 		
-		populacao = populacaoFactory.criarNovaPopulacao(populacao);
+		
+		for (int i = 0; i < Constantes.MAXIMO_GERACOES; i++) {
+			populacao = populacaoFactory.criarNovaPopulacao(populacao);	
+			populacao.avaliarPopulacao();
+			System.out.println("*** melhor individuo da população-> "+populacao.getMelhorIndividuo().toString());
+			if(populacao.getMelhorIndividuo().getValorTotal() > melhorInviduo.getValorTotal()) {
+				geracao = populacao.getGeracao();
+				melhorInviduo = populacao.getMelhorIndividuo(); 
+			}
+		}
+		
+		System.out.println("melhor individuo geração "+geracao);
+		System.out.println(melhorInviduo.toString());
 			
 	}
 	
