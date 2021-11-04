@@ -147,9 +147,4 @@ public class PopulacaoFactory {
 		ind2.calcularPesoTotal();
 	}
 	
-	private void mutacao() {
-
-	}
-	
-	
 }

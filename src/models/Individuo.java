@@ -43,7 +43,11 @@ public class Individuo {
 	public int[] getFitaCromossomos() {
 		return fitaCromossomos;
 	}
-	
+
+	public void setFitaCromossomos(int[] fitaCromossomos) {
+		this.fitaCromossomos = fitaCromossomos;
+	}
+
 	private void preencherFitaCromos() {
 		fitaCromossomos = new int[Constantes.QUANT_CROMOSSOMOS];
 		fitaCromossomos[0] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaA());;

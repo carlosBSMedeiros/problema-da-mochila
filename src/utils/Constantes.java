@@ -23,4 +23,9 @@ public class Constantes {
 	public static final int TAMANHO_POPULACAO = 4;
 	
 	public static final int CAPACIDADE_MOCHILA = 25;
+
+	public static final int PORCENTAGEM_MUTACAO = 100;
+
+	public static final int VALOR_MAX_MUTACAO = 5;
+
 }
