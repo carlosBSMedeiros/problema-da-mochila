@@ -15,9 +15,12 @@ import utils.Utils;
 public class PopulacaoFactory {
 
 	IndividuosFactory individuosFactory;
+	MutacaoFactory fabricaMutacao;
+
 	
 	public PopulacaoFactory() {
 		individuosFactory = new IndividuosFactory();
+		fabricaMutacao = new MutacaoFactory();
 	}
 
 	public Populacao criaPopulacaoInicial() {
@@ -46,12 +49,11 @@ public class PopulacaoFactory {
 		int elitismo = (int) Math.round(numeroElitismo);
 		novaPopulacao.setIndividuos(populacaoAnterior.getIndividuos().subList(0, elitismo));
 		
+
 		for (int i = elitismo; i < Constantes.TAMANHO_POPULACAO; i++) {
 			novaPopulacao = crossOver(novaPopulacao, populacaoAnterior);
 		}
 		novaPopulacao.setGeracaoAnterior(populacaoAnterior);
-		//selecionar um individuo para mutação
-		mutacao();
 		
 		System.out.println("====================");
 		System.out.println("População nova");
@@ -80,7 +82,9 @@ public class PopulacaoFactory {
 		if(!individuosFactory.validarIndividuo(novoIndiv)) {
 			novoIndiv = individuosFactory.criarIndividuoValido();
 		}
-		
+
+		novoIndiv = fabricaMutacao.mutacao(novoIndiv);
+
 		//adiciona os individuos a população nova apos o crossover
 		novaPopulacao.getIndividuos().add(novoIndiv);
 		
