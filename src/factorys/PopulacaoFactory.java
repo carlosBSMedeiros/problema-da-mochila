@@ -30,10 +30,10 @@ public class PopulacaoFactory {
 		return populacaoInicial;
 	}
 
-	public Populacao criarNovaPopulacao(Populacao populacaoAnterior) {
+public Populacao criarNovaPopulacao(Populacao populacaoAnterior) {
 		
-		System.out.println("População anterior");
-		System.out.println(populacaoAnterior.toString());
+//		System.out.println("População anterior");
+//		System.out.println(populacaoAnterior.toString());
 		
 		//cria nova população zerada, apnas com o numero da geração
 		Populacao novaPopulacao = new Populacao(populacaoAnterior.getGeracao() + 1);
@@ -41,6 +41,8 @@ public class PopulacaoFactory {
 		//aqui inicia o crossover na população. O objetivo é selecionar
 		//dois individuos, fazer o crossover deles, adicionar os dois individos a nova pop
 		//e adicionar os individuos da população anterior que não sofreram cross over
+		//novaPopulacao = crossOver(novaPopulacao, populacaoAnterior);
+
 		
 		double numeroElitismo = (Constantes.ELITISMO * Constantes.TAMANHO_POPULACAO); 
 		int elitismo = (int) Math.round(numeroElitismo);
@@ -62,28 +64,34 @@ public class PopulacaoFactory {
 
 	public Populacao crossOver(Populacao novaPopulacao, Populacao populacaoAnterior) {
 		Random random = new Random();
-		
-		//dividir em dois vetores auxiliares os dois grupos de individuos
+
+
 		List<Individuo> melhoresIndividuos = novaPopulacao.getIndividuos();
-		int index = random.nextInt(novaPopulacao.getIndividuos().size());
-		Individuo indiv1 = melhoresIndividuos.get(index);
+
+		int index;
+		int index2;
+		Individuo indiv2;
+		Individuo indiv1;
 		
-		index = random.nextInt(novaPopulacao.getIndividuos().size());
-		Individuo indiv2 = melhoresIndividuos.get(index);
+		do {
+			index = random.nextInt(novaPopulacao.getIndividuos().size());
+			indiv1 = melhoresIndividuos.get(index);
+			
+			index2 = random.nextInt(novaPopulacao.getIndividuos().size());
+			indiv2 = melhoresIndividuos.get(index2);
+		} while (index==index2);
 		
-		
-		//individuos selecinados aleatoriamente para o cross over - SELEÇÃO FUNCIONANDO
-		//efetivamente faz o crossover entre os individuos
-		 Individuo novoIndiv = crossOver(indiv1, indiv2);
-		
-		//o cross over pode gerar individuos invalidos. Se forem, geramos novos aleatorios
-		if(!individuosFactory.validarIndividuo(novoIndiv)) {
+		Individuo novoIndiv = crossOver(indiv1, indiv2);
+
+		// o cross over pode gerar individuos invalidos. Se forem, geramos novos
+		// aleatorios
+		if (!individuosFactory.validarIndividuo(novoIndiv)) {
 			novoIndiv = individuosFactory.criarIndividuoValido();
 		}
-		
-		//adiciona os individuos a população nova apos o crossover
+
+		// adiciona os individuos a população nova apos o crossover
 		novaPopulacao.getIndividuos().add(novoIndiv);
-		
+
 		return novaPopulacao;
 	}
 	
@@ -116,10 +124,16 @@ public class PopulacaoFactory {
 	}
 	
 	private Individuo crossOver(Individuo ind1, Individuo ind2) {
-		Individuo novo = new Individuo();
+		Individuo novo = individuosFactory.criarIndividuoValido();
+		if(novo.getValorTotal() > 395) {
+			System.out.println(true);
+		}
 		
 		Random random = new Random();
-		int indexCromossomo = random.nextInt(Constantes.QUANT_CROMOSSOMOS);
+		int indexCromossomo = Constantes.QUANT_CROMOSSOMOS/2;
+		indexCromossomo = indexCromossomo - 1;
+		double prob = random.nextDouble();
+		prob = new BigDecimal(prob).setScale(2, RoundingMode.FLOOR).doubleValue();
 		
 		for (int i = 0; i < ind1.getFitaCromossomos().length; i++) {
 			if(i <= indexCromossomo) {
@@ -131,7 +145,27 @@ public class PopulacaoFactory {
 			
 		}
 		
+		if(Constantes.PROB_MUTACAO > prob) {
+			int numeroCromo ;
+			do {
+				numeroCromo= random.nextInt(Constantes.QUANT_CROMOSSOMOS);
+			} while (numeroCromo < 1);
+			
+			Individuo novoAux = individuosFactory.criarIndividuoValido();
+			for (int i = 0; i < numeroCromo; i++) {
+					int idx = random.nextInt(Constantes.QUANT_CROMOSSOMOS);
+					novo.getFitaCromossomos()[idx] = novoAux.getFitaCromossomos()[idx];
+			}
+		}
+		
+		
+		novo.calcularPesoTotal();
+		novo.calcularValorTotal();
 		return novo;
+	}
+	
+	private void mutacao() {
+		
 	}
 	
 }

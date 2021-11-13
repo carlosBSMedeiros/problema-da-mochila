@@ -22,10 +22,10 @@ public class MutacaoFactory {
     }
 
     private boolean haMutacao() {
-        Double chanceMutacao = Utils.geraNumeroAleatorio();
-        if (chanceMutacao <= Constantes.PORCENTAGEM_MUTACAO) {
-            return true;
-        }
+//        Double chanceMutacao = Utils.geraNumeroAleatorio();
+//        if (chanceMutacao <= Constantes.PORCENTAGEM_MUTACAO) {
+//            return true;
+//        }
         return false;
     }
 
@@ -45,7 +45,7 @@ public class MutacaoFactory {
 
         Random random = new Random();
 
-        fitaCromossomoMutada[indexCromossomoMutado] = random.nextInt(Constantes.VALOR_MAX_MUTACAO);
+//        fitaCromossomoMutada[indexCromossomoMutado] = random.nextInt(Constantes.VALOR_MAX_MUTACAO);
 
         individuo.setFitaCromossomos(fitaCromossomoMutada);
 

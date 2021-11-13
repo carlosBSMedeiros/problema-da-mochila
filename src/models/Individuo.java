@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Random;
+
 import utils.Constantes;
 import utils.PorcentagensCaixas;
 import utils.Utils;
@@ -54,8 +56,32 @@ public class Individuo {
 		fitaCromossomos[1] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaB());;
 		fitaCromossomos[2] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaC());
 		fitaCromossomos[3] = Utils.retornaQuantidadeCaixas(PorcentagensCaixas.getPctgCaixaD());
-	}
 
+	}
+	
+//	private int[] preencheFita() {
+//		Random gerador = new Random();
+//		int[] fita;
+//		do {
+//			fita = new int[Constantes.QUANT_CROMOSSOMOS];
+//			
+//			for (int i = 0; i < Constantes.QUANT_CROMOSSOMOS; i++) {
+//				fita[i] = gerador.nextInt(24);
+//			}
+//		} while (calcularPesoTotal(fita) > 25);
+//		
+//
+//		return fita;
+//	}
+	
+	private int calcularPesoTotal(int[] fita) {
+		return (fita[0] * Constantes.PESO_CAIXA_A)
+				+ (fita[1] * Constantes.PESO_CAIXA_B)
+				+ (fita[2] * Constantes.PESO_CAIXA_C)
+				+ (fita[3] * Constantes.PESO_CAIXA_D);
+	}
+	
+	
 	public void calcularPesoTotal() {
 		this.pesoTotal = (this.getCromossomoCaixaA() * Constantes.PESO_CAIXA_A)
 				+ (this.getCromossomoCaixaB() * Constantes.PESO_CAIXA_B)
@@ -63,7 +89,7 @@ public class Individuo {
 				+ (this.getCromossomoCaixaD() * Constantes.PESO_CAIXA_D);
 	}
 	
-	private void calcularValorTotal() {
+	public void calcularValorTotal() {
 		this.valorTotal = (this.getCromossomoCaixaA() * Constantes.VALOR_CAIXA_A)
 				+ (this.getCromossomoCaixaB() * Constantes.VALOR_CAIXA_B)
 				+ (this.getCromossomoCaixaC() * Constantes.VALOR_CAIXA_C)

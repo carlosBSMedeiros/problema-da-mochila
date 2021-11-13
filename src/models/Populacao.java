@@ -30,6 +30,7 @@ public class Populacao {
 		this.individuos = individuos;
 	}
 
+	
 	public List<Individuo> getIndividuos() {
 		return this.individuos;
 	}
@@ -72,6 +73,7 @@ public class Populacao {
 		int i;
 
 		Individuo individuoAux = null;
+//		Individuo[] individuosVet = new Individuo[Constantes.TAMANHO_POPULACAO];
 		Individuo[] individuosVet = new Individuo[individuos.size()];
 		
 		individuos.toArray(individuosVet);
