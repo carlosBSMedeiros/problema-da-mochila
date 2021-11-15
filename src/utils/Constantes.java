@@ -20,7 +20,7 @@ public class Constantes {
 
 	public static final int QUANT_CROMOSSOMOS = 4;
 
-	public static final int TAMANHO_POPULACAO = 4;
+	public static final int TAMANHO_POPULACAO = 10;
 	
 	public static final int CAPACIDADE_MOCHILA = 25;
 
@@ -28,7 +28,7 @@ public class Constantes {
 
 	public static final int VALOR_MAX_MUTACAO = 5;
 
-	public static final int MAXIMO_GERACOES = 50;
+	public static final int MAXIMO_GERACOES = 5;
 
 	public static final double PROB_MUTACAO = 0.2;
 	

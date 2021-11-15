@@ -30,14 +30,15 @@ public class PopulacaoFactory {
 			Individuo individuo = individuosFactory.criarIndividuoValido();
 			populacaoInicial.getIndividuos().add(individuo);
 		}
+		
+		System.out.println("População inicial");
+		System.out.println(populacaoInicial.toString());
+
+		
 		return populacaoInicial;
 	}
 
 	public Populacao criarNovaPopulacao(Populacao populacaoAnterior) {
-		
-		System.out.println("População anterior");
-		System.out.println(populacaoAnterior.toString());
-		
 		//cria nova população zerada, apnas com o numero da geração
 		Populacao novaPopulacao = new Populacao(populacaoAnterior.getGeracao() + 1);
 		
@@ -67,24 +68,32 @@ public class PopulacaoFactory {
 		
 		//dividir em dois vetores auxiliares os dois grupos de individuos
 		List<Individuo> melhoresIndividuos = novaPopulacao.getIndividuos();
-		int index = random.nextInt(novaPopulacao.getIndividuos().size());
-		Individuo indiv1 = melhoresIndividuos.get(index);
+		int index;
+		int index2;
+		Individuo indiv2;
+		Individuo indiv1;
 		
-		index = random.nextInt(novaPopulacao.getIndividuos().size());
-		Individuo indiv2 = melhoresIndividuos.get(index);
+		do {
+			index = random.nextInt(novaPopulacao.getIndividuos().size());
+			indiv1 = melhoresIndividuos.get(index);
+			
+			index2 = random.nextInt(novaPopulacao.getIndividuos().size());
+			indiv2 = melhoresIndividuos.get(index2);
+			
+		} while (index==index2);
 		
 		
 		//individuos selecinados aleatoriamente para o cross over - SELEÇÃO FUNCIONANDO
 		//efetivamente faz o crossover entre os individuos
 		 Individuo novoIndiv = crossOver(indiv1, indiv2);
-		
+		 
 		//o cross over pode gerar individuos invalidos. Se forem, geramos novos aleatorios
 		if(!individuosFactory.validarIndividuo(novoIndiv)) {
 			novoIndiv = individuosFactory.criarIndividuoValido();
 		}
 
 		novoIndiv = fabricaMutacao.mutacao(novoIndiv);
-
+		fabricaMutacao.mutacao(novoIndiv);
 		//adiciona os individuos a população nova apos o crossover
 		novaPopulacao.getIndividuos().add(novoIndiv);
 		
@@ -120,11 +129,10 @@ public class PopulacaoFactory {
 	}
 	
 	private Individuo crossOver(Individuo ind1, Individuo ind2) {
-		Individuo novo = new Individuo();
+		Individuo novo = individuosFactory.criarIndividuoValido();
 		
-		Random random = new Random();
-		int indexCromossomo = random.nextInt(Constantes.QUANT_CROMOSSOMOS);
-		
+		int indexCromossomo = Constantes.QUANT_CROMOSSOMOS/2;
+		indexCromossomo = indexCromossomo - 1;
 		for (int i = 0; i < ind1.getFitaCromossomos().length; i++) {
 			if(i <= indexCromossomo) {
 				novo.getFitaCromossomos()[i] = ind1.getFitaCromossomos()[i];				
